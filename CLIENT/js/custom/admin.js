@@ -246,38 +246,53 @@ app.controller('EventCtrl', function($scope, $http, CONFIGS, $timeout, Upload, $
 		// var url = CONFIGS.api_url + 'events';
 		var url = '/api/v1/events';
 
-		$http({
-			url: '/ajaxDatatableLoad.php?url=' + url +'&req_list=' + JSON.stringify(["unique_id", "name", "start_date", "end_date", "is_active", "type"]) + '&id_link=' + encodeURIComponent(link) + '&filter_list=' + JSON.stringify(filter_list) + 'req_type=EVENT',
-			method : 'GET',
-			dataType : 'json',
-			success: function(ret_data) {
-				console.log(ret_data, "::::::ret_data");
-			}
-		});
+		var req_data = {};
+		req_data['url'] = url;
+		req_data['req_list'] = JSON.stringify(["unique_id", "name", "start_date", "end_date", "is_active", "type"]);
+		req_data['id_link'] = encodeURIComponent(link);
+		req_data['filter_list'] = JSON.stringify(filter_list);
+		req_data['req_type'] = 'EVENT';
 
-		// $("#events_list").dataTable({
-		// 	"bDestroy": true,
-		// 	"bProcessing": true,
-		//     "bServerSide": true,
-		//     "bSortClasses": false,
-		//     "bAutoWidth": false,
-		//     "bLengthChange": false,
-		//     "iDisplayLength": 20,
-		//     "sAjaxSource": '../../ajaxDatatableLoad.php?url=' + url +'&req_list=' + JSON.stringify(['unique_id', 'name', 'start_date', 'end_date', 'is_active', 'type']) + '&id_link=' + encodeURIComponent(link) + '&filter_list=' + JSON.stringify(filter_list) + 'req_type=EVENT',
-		//     "aoColumns": [
-		//     	{"bSortable": false, "bSearchable": false}, //uniqueId
-		//     	{"bSortable": false, "bSearchable": false}, //name
-		//     	{"bSortable": false, "bSearchable": false}, //start_date
-		//     	{"bSortable": false, "bSearchable": false}, //end_date
-		//     	{"bSortable": false, "bSearchable": false}, //is_active
-		//     	{"bSortable": false, "bSearchable": false}, //type
-		//     	{"bSortable": false, "bSearchable": false} //active/inactive update
-		//     ],
-		//     "fnInitComplete": function(settings, json) {
-		// 		var updateStatus = angular.element($('.update_status'));
-		// 		updateStatus.bind('click', $scope.statusUpdate);
+		getTableJson(function(ret_data) {
+			console.log(ret_data['aaData']);	
+			$("#events_list").dataTable({
+				"bDestroy": true,
+				// "bProcessing": true,
+			    // "bServerSide": true,
+			    "bSortClasses": false,
+			    "bAutoWidth": false,
+			    "bLengthChange": false,
+			    "iDisplayLength": 20,
+			    "aaData": ret_data['aaData'],
+			    "aoColumns": [
+			    	{"bSortable": false, "bSearchable": false}, //uniqueId
+			    	{"bSortable": false, "bSearchable": false}, //name
+			    	{"bSortable": false, "bSearchable": false}, //start_date
+			    	{"bSortable": false, "bSearchable": false}, //end_date
+			    	{"bSortable": false, "bSearchable": false}, //is_active
+			    	{"bSortable": false, "bSearchable": false}, //type
+			    	{"bSortable": false, "bSearchable": false} //active/inactive update
+			    ],
+			    "fnInitComplete": function(settings, json) {
+					var updateStatus = angular.element($('.update_status'));
+					updateStatus.bind('click', $scope.statusUpdate);
+				}
+			});
+		}, req_data);
+		// var ret_data = getTableJson(req_data);
+
+		// $http({
+		// 	url: '/ajaxDatatableLoad.php?url=' + url +'&req_list=' + JSON.stringify(["unique_id", "name", "start_date", "end_date", "is_active", "type"]) + '&id_link=' + encodeURIComponent(link) + '&filter_list=' + JSON.stringify(filter_list) + '&req_type=EVENT',
+		// 	method : 'GET',
+		// 	// dataType : 'json',
+		// 	success: function(ret_data) {
+		// 		console.log(ret_data, "::::::ret_data");
+		// 	}, 
+		// 	error : function(err_data) {
+		// 		console.log(err_data, "::::::err_data");
 		// 	}
 		// });
+
 		$("#events_list_filter").hide();
 	}
 

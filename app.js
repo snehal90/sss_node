@@ -61,8 +61,8 @@ app.use(allowCrossDomain);
 var clientRouter = require('./config/clientRouter')(express);
 var adminRouter = require('./config/adminRouter')(express);
 
-app.use('/', clientRouter.obj);
 app.use('/', adminRouter.obj);
+app.use('/', clientRouter.obj);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
