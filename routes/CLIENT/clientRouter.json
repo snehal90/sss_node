@@ -1,0 +1,22 @@
+{
+	"/admin" : {
+		"GET" : {
+			"route" : "DashboardController:admin_home"
+		}
+	},
+	"/admin*" : {
+		"GET" : {
+			"route" : "DashboardController:admin_home"
+		}
+	},
+	"/login" : {
+		"GET" : {
+			"route" : "DashboardController:admin_home"
+		}
+	},
+	"/*" : {
+		"GET" : {
+			"route" : "DashboardController:home"
+		}
+	}
+}

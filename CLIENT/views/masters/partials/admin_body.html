@@ -1,0 +1,26 @@
+<!-- START PAGE CONTAINER -->
+<div class="page-container page-navigation-top-fixed">
+    
+    <!-- START PAGE SIDEBAR -->
+    <ng-include src="'../../views/masters/partials/admin_sidebar.html'"></ng-include>
+    <!-- END PAGE SIDEBAR -->
+    
+    <!-- PAGE CONTENT -->
+    <div class="page-content">
+        
+        <!-- START X-NAVIGATION VERTICAL -->
+        <ng-include src="'../../views/masters/partials/admin_top_header.html'"></ng-include>
+        <!-- END X-NAVIGATION VERTICAL -->                     
+
+        <!-- START BREADCRUMB -->
+        <ng-include src="'../../views/masters/partials/admin_breadcrumb.html'"></ng-include>
+        <!-- END BREADCRUMB -->                       
+        <div ui-view="" >
+        </div>                               
+    </div>            
+    <!-- END PAGE CONTENT -->
+</div>
+<!-- END PAGE CONTAINER -->
+
+    
+<ng-include src="'../../views/masters/partials/admin_footer.html'"></ng-include>

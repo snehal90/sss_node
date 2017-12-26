@@ -1,0 +1,33 @@
+{
+	"/events" : {
+		"GET" : {
+			"route" : "EventsController:getList"
+		}
+	},
+	"/event/add" : {
+		"POST" : {
+			"route" : "EventsController:add"
+		}
+	},
+	"/event/update/:unique_id" : {
+		"POST" : {
+			"route" : "EventsController:update"
+		}
+	},
+	"/fileUpload" : {
+		"POST" : {
+			"route" : "UtilController:fileUpload"
+		}
+	},
+	"/deleteFiles" : {
+		"POST" : {
+			"route" : "UtilController:deleteFiles"
+		}
+	},
+	"/user/login" : {
+		"POST" : {
+			"route" : "UserController:login",
+			"policy" : "AuthPolicy:checkSecretKey"
+		}
+	}
+}
