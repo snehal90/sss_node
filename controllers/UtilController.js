@@ -6,6 +6,7 @@ var async = require('async');
 exports.fileUpload = function(req, res, callback) {
 	var images = req.files;
 	var type = req.body.type;
+	var base_url_dt = BASE_URL != '' ? BASE_URL : '//' + req.get('host') + '/';
 	file_helper_obj.uploadImages(function(err, res_dt) {
 		if(err) {
 			var error = errorCodes.error_403.server_error;
@@ -15,7 +16,7 @@ exports.fileUpload = function(req, res, callback) {
 
 		result_response.responseParams.data = res_dt;
 		res.status(result_response.responseHeaders.status).send(result_response.responseParams);
-	}, images, type.toUpperCase());
+	}, images, type.toUpperCase(), 0, base_url_dt);
 }
 
 exports.deleteFiles = function(req, res, callback) {

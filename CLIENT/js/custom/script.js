@@ -124,7 +124,7 @@ function getTableJson(callback, req_data) {
                             if (hours.length < 2) hours = '0' + hours;
                             if (minutes.length < 2) minutes = '0' + minutes;
 
-                            var formatted_date = year + '-' + hours + '-' + day + ' ' + hours + ':' + minutes;
+                            var formatted_date = year + '-' + month + '-' + day + ' ' + hours + ':' + minutes;
                             dt[dt.length] = formatted_date;
                         } else {
                             dt[dt.length] = data[param];

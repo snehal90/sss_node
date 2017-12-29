@@ -22,7 +22,7 @@
                 <textarea id="content" ng-model="content" class="content form-control"></textarea>
             </div>
         </div>
-        <div class="form-group col-md-12">
+        <div class="form-group col-md-12 start_dt_container">
             <label class="col-md-3 col-xs-12 control-label">*Start Datetime: </label>
             <div class="col-md-9 col-xs-12">
                 <div id="start_datetime_container" class="input-group col-md-8">
@@ -33,7 +33,7 @@
                 </div>
             </div>
         </div>
-        <div class="form-group col-md-12">
+        <div class="form-group col-md-12 end_dt_container">
             <label class="col-md-3 col-xs-12 control-label">*End Datetime: </label>
             <div class="col-md-9 col-xs-12">
                 <div id="end_datetime_container" class="input-group col-md-8">
@@ -84,3 +84,19 @@
     <ol class="indicator"></ol>
 </div>      
 <!-- END BLUEIMP GALLERY -->
+<script type="text/javascript">
+$('#content').summernote(
+{
+    height: 150,
+    codemirror: {
+        mode: 'text/html',
+        htmlMode: true,
+        lineNumbers: true,
+        theme: 'default'
+    }
+});
+$("#start_time").timepicker({minuteStep: 1,showMeridian: false, defaultTime: '', appendWidgetTo : '#start_datetime_container'});
+$("#end_time").timepicker({minuteStep: 1,showMeridian: false, defaultTime: '', appendWidgetTo : '#end_datetime_container'});
+$(".start_date").datepicker({format: 'yyyy-mm-dd', container : '.start_dt_container'});  
+$(".end_date").datepicker({format: 'yyyy-mm-dd', container : '.end_dt_container'});  
+</script>

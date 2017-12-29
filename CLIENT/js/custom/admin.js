@@ -32,17 +32,27 @@ app.config(['$stateProvider', '$urlRouterProvider', '$cssProvider', '$locationPr
 	}).state('admin.events', {
 		url: '/events',
 		templateUrl : '/views/events/list.html',
-		css: ['css/theme-default.css'],
+		css: ['/css/theme-default.css'],
+		onEnter: function($rootScope, $timeout, $stateParams) { 
+			$timeout(function() {
+	            $rootScope.$broadcast('eventListView');
+			}, 500);
+		},
 		controller : 'EventCtrl'
 	}).state('admin.events_create', {
 		url: '/events/create',
 		templateUrl : '/views/events/create_view.html',
-		css: ['css/theme-default.css'],
+		css: ['/css/theme-default.css'],
+		onEnter: function($rootScope, $timeout, $stateParams) { 
+			$timeout(function() {
+	            $rootScope.$broadcast('createView');
+	        })
+		},
 		controller : 'EventCtrl'
 	}).state('admin.events_edit', {
 		url: '/events/:unique_id',
 		templateUrl : '/views/events/edit_view.html',
-		css: ['css/theme-default.css'],
+		css: ['/css/theme-default.css'],
 
 		onEnter: function($rootScope, $timeout, $stateParams) { 
 			$timeout(function() {
@@ -212,9 +222,12 @@ app.controller('EventCtrl', function($scope, $http, CONFIGS, $timeout, Upload, $
 	var link = $scope.base_url + 'admin/events/{unique_id}';
 	var filter_list = {};
 
-	$timeout(function() {
+	// $timeout(function() {
+	// 	event_list_table({});
+	// }, 500);
+	$scope.$on('eventListView', function(event) {
 		event_list_table({});
-	}, 500);
+	});
 
 	$scope.filter_clicked = function(key, $event, event_type, value) {
 		if(event_type == 'keyup') {
@@ -302,6 +315,7 @@ app.controller('EventCtrl', function($scope, $http, CONFIGS, $timeout, Upload, $
             Upload.upload({
                 // url: CONFIGS.api_url + 'fileUpload',
                 url: '/api/v1/fileUpload',
+                method: 'post',
                 data: {
                     files: files,
                     type: 'EVENT'
@@ -472,10 +486,14 @@ app.controller('EventCtrl', function($scope, $http, CONFIGS, $timeout, Upload, $
 			var name = $.trim($scope.name);
 			var short_description = $.trim($scope.short_description);
 			var content = $.trim($('#content').code());
-			var start_date = $.trim($scope.start_date);
-			var start_time = $.trim($scope.start_time);
-			var end_date = $.trim($scope.end_date);
-			var end_time = $.trim($scope.end_time);
+			// var start_date = $.trim($scope.start_date);
+			// var start_time = $.trim($scope.start_time);
+			// var end_date = $.trim($scope.end_date);
+			// var end_time = $.trim($scope.end_time);
+			var start_date = $.trim($("#start_date").val());
+			var start_time = $.trim($("#start_time").val());
+			var end_date = $.trim($("#end_date").val());
+			var end_time = $.trim($("#end_time").val());
 			var is_active = $.trim($scope.is_active);
 			// var images = files_dt.length != 0 ? files_dt : {};
 			var error_msg = {};
@@ -543,7 +561,6 @@ app.controller('EventCtrl', function($scope, $http, CONFIGS, $timeout, Upload, $
 			post_data['remove_images'] = remove_images_list;
 		}
 
-		// return false;
 		$http({
 			url : '/api/v1/event/update/' + id,
 			method : 'post',

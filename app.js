@@ -4,13 +4,15 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var multer = require('multer');
 var env_config = require('./config/env')();
 
 console.log(env_config, "::::env_config");
 
 //global variables
 global.ROOT_DIR = __dirname + '/';
-global.BASE_URL = '//' + env_config.api_host + ':' + env_config.port + '/';
+// global.BASE_URL = '//' + env_config.api_host + ':' + env_config.port + '/';
+global.BASE_URL = '';
 global.PWD_SALT = 'PINKPYTHON';
 global.SECRET_KEY = 'dBBmapwEBWUkcUg7xP8Buvp6vc36truv';
 global.JWT_SECRET_KEY = 'SsQcqWRZDYsnsJBaHQvmDE5q4r4t75Mb';
@@ -35,8 +37,10 @@ console.log(app.get('views'), ":::::::path");
 app.use(logger(env_config.mode));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(multer({dest:'./temp/'}).any());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'CLIENT')));
+app.use(express.static(path.join(__dirname, 'public')));
 // app.use(require('less-middleware')(path.join(__dirname, 'public')));
 // app.use(express.static(path.join(__dirname, 'public')));
 

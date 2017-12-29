@@ -1,6 +1,5 @@
 <div>
     <ng-include src="'../../views/masters/partials/admin_heading.html'"></ng-include>
-	<?php //include('../../views/masters/partials/admin_heading.php');?>
 	<!-- PAGE CONTENT WRAPPER -->
 	<div class="page-content-wrap">
 
@@ -12,7 +11,7 @@
                         <button class="btn btn-primary">Add Event</button>
                 	</div> -->
                 </div>
-                <?php include('./partials/event_form.html'); ?>
+                <ng-include src="'../../views/events/partials/event_form.html'"></ng-include>
             </div>
         </div>
     </div>
@@ -32,18 +31,3 @@
     </div>
 </div>
 <!-- end success -->
-<script type="text/javascript">
-$(document).ready(function() {
-    $('#content').summernote(
-        {
-            height: 150,
-            codemirror: {
-                mode: 'text/html',
-                htmlMode: true,
-                lineNumbers: true,
-                theme: 'default'
-            }
-        });
-    $("#start_time,#end_time").timepicker({minuteStep: 1,showMeridian: false, defaultTime: ''});
-});
-</script>
