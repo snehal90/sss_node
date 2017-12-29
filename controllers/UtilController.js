@@ -6,7 +6,7 @@ var async = require('async');
 exports.fileUpload = function(req, res, callback) {
 	var images = req.files;
 	var type = req.body.type;
-	console.log(req.connection.encrypted, "::::req.connection.encrypted");
+	console.log(req.protocol, "::::req.protocol");
 	var base_url_dt = BASE_URL != '' ? BASE_URL : (req.secure ? 'https:' : 'http:') + '//' + req.get('host') + '/';
 	file_helper_obj.uploadImages(function(err, res_dt) {
 		if(err) {
