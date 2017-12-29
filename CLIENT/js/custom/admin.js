@@ -331,14 +331,14 @@ app.controller('EventCtrl', function($scope, $http, CONFIGS, $timeout, Upload, $
 
 	$scope.addEvent = function() {
 		$('label.error').remove();
-		var name = $.trim($scope.name);
-		var short_description = $.trim($scope.short_description);
+		var name = $.trim($('#name').val());
+		var short_description = $.trim($('#short_description').val());
 		var content = $.trim($('#content').code());
-		var start_date = $.trim($scope.start_date);
-		var start_time = $.trim($scope.start_time);
-		var end_date = $.trim($scope.end_date);
-		var end_time = $.trim($scope.end_time);
-		var is_active = $.trim($scope.is_active);
+		var start_date = $.trim($('#start_date').val());
+		var start_time = $.trim($('#start_time').val());
+		var end_date = $.trim($('#end_date').val());
+		var end_time = $.trim($('#end_time').val());
+		var is_active = $.trim($('.is_active:checked').val());
 		// var images = files_dt.length != 0 ? files_dt : {};
 		var error_msg = {};
 		if(name == '') {
@@ -484,7 +484,7 @@ app.controller('EventCtrl', function($scope, $http, CONFIGS, $timeout, Upload, $
 		$('label.error').remove();
 		if(post_data == undefined) {
 			var name = $.trim($scope.name);
-			var short_description = $.trim($scope.short_description);
+			var short_description = $.trim($('#short_description').val());
 			var content = $.trim($('#content').code());
 			// var start_date = $.trim($scope.start_date);
 			// var start_time = $.trim($scope.start_time);
@@ -494,7 +494,7 @@ app.controller('EventCtrl', function($scope, $http, CONFIGS, $timeout, Upload, $
 			var start_time = $.trim($("#start_time").val());
 			var end_date = $.trim($("#end_date").val());
 			var end_time = $.trim($("#end_time").val());
-			var is_active = $.trim($scope.is_active);
+			var is_active = $.trim($('.is_active:checked').val());
 			// var images = files_dt.length != 0 ? files_dt : {};
 			var error_msg = {};
 			if(name == '') {
