@@ -57,12 +57,12 @@
             <div class="col-md-6 col-xs-12">
                 <input type="file" id="images" name="images[]" class="form-control images" ngf-select="uploadFiles($files)" multiple accept="'image/*'"/>
                 <div class="gallery" id="links">
-                    <a ng-repeat="image in existing_images" class="gallery-item" href="{{image.image_path}}" title="{{image.image_path}}" data-gallery="">
+                    <a ng-repeat="image in existing_images" class="gallery-item" href="{{location.protocol+image.image_path}}" title="{{image.image_path}}" data-gallery="">
                         <div class="image">
                             <span class="helper"></span>
-                            <img ng-src="{{utilService.formatImagePath(image.image_path, 'THUMB')}}" alt="{{utilService.formatImagePath(image.image_path, 'THUMB')}}" onerror="this.src='/assets/images/no_image_default.png'">    
+                            <img ng-src="{{location.protocol  + utilService.formatImagePath(image.image_path, 'THUMB')}}" alt="{{location.protocol+utilService.formatImagePath(image.image_path, 'THUMB')}}" onerror="this.src='/assets/images/no_image_default.png'">    
                             <ul class="gallery-item-controls">
-                                <li><span class="file_remove" data-path="{{image.path}}" title="Click to remove image"><i class="fa fa-times"></i></span></li>
+                                <li><span class="file_remove" data-path="{{location.protocol+image.path}}" title="Click to remove image"><i class="fa fa-times"></i></span></li>
                             </ul>                                                                    
                         </div>                            
                     </a>
@@ -85,6 +85,7 @@
 </div>      
 <!-- END BLUEIMP GALLERY -->
 <script type="text/javascript">
+console.log(location.protocol, ":::::location.protocol");
 $('#content').summernote(
 {
     height: 150,
