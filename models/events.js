@@ -4,7 +4,6 @@ var Checkit = require('checkit');
 var moment = require('moment');
 var moment_tz = require('moment-timezone');
 var slug = require('slug');
-var moment = require('moment');
 var errorCodes = require('../config/error');
 var _ = require('underscore');
 var gallery = require('../models/gallery');

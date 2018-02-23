@@ -29,5 +29,15 @@
 			"route" : "UserController:login",
 			"policy" : "AuthPolicy:checkSecretKey"
 		}
+	},
+	"/blog/add" : {
+		"POST" : {
+			"route" : "BlogsController:addBlog"
+		}
+	},
+	"/blog/update/:unique_id" : {
+		"PUT" : {
+			"route" : "BlogsController:updateBlog"
+		}
 	}
 }
