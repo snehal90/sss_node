@@ -2,6 +2,7 @@ var blogs = db.collection('blogs');
 
 var Checkit = require('checkit');
 var moment = require('moment');
+var async = require('async');
 var slug = require('slug');
 var errorCodes = require('../config/error');
 
@@ -48,7 +49,8 @@ exports.add = function(callback, data) {
 		data['unique_id'] = 'BLOGS_' + moment().valueOf();
 		data['created_at'] = data['updated_at'] = moment().format();
 		data['created_by'] = data['updated_by'] = data['blog_author_email'];
-		data['is_active'] = !data['is_active'] ? 1 : data['is_active'];
+		data['is_active'] = !data['is_active'] ? 1 : parseInt(data['is_active'], 10);
+		data['blog_status'] = !data['blog_status'] ? 1 : parseInt(data['blog_status'], 10);
 		data['content_type'] = 'BLOG';
 
 		gallery_list = [];
@@ -122,11 +124,11 @@ exports.update = function(callback, data, unique_id) {
 	}
 
 	if(data['is_active'] != undefined) {
-		body['is_active'] = data['is_active'];
+		body['is_active'] = parseInt(data['is_active'], 10);
 	}
 
 	if(data['blog_status'] != undefined) {
-		body['blog_status'] = data['blog_status'];
+		body['blog_status'] = parseInt(data['blog_status'], 10);
 	}
 
 	checkit.run(body).then(function(validated) {
@@ -148,4 +150,62 @@ exports.update = function(callback, data, unique_id) {
 		error.responseParams.message = err.toJSON();
 	  	callback(error);
 	})
+}
+
+exports.getList = function(callback, query) {
+	var filter_qry = {};
+	var limit = 20;
+	var offset = 0;
+	var page = 1;
+	var sort = {'created_at' : -1};
+
+	for(var i in query) {
+		if(i == 'limit') {
+			limit = parseInt(query[i], 10);
+		} else if(i == 'page') {
+			page = parseInt(query[i], 10);
+		} else if(i == 'is_active' || i == 'blog_status') {
+			filter_qry[i] = parseInt(query[i], 10);
+		}  else if(i == 'blog_author_name' || i == 'blog_title') {
+			filter_qry[i] = {'$regex' : query[i]};
+		} else {
+			filter_qry[i] = query[i];
+		}
+	}
+
+	var offset = (page - 1) < 0 ? 0 : ((page - 1) * limit);
+	async.parallel([
+		function(cb1) {
+			blogs.find(filter_qry, {}).sort(sort).limit(limit).skip(offset).toArray(function(err, ret_data) {
+				if(err) {
+					var error = errorCodes.error_403.server_error;
+					return callback(error);
+				}
+				cb1(null, {data : ret_data});
+			});
+		},
+		function(cb2) {
+			blogs.count(filter_qry, function(err, ret_data_count) {
+				if(err) {
+					var error = errorCodes.error_403.server_error;
+					return callback(error);
+				}
+
+				var page_count = Math.ceil(ret_data_count / limit);
+				var meta_data = {
+					'count' : ret_data_count, 
+					'page_count' : page_count, 
+					'page' : page, 
+					'limit' : limit
+				};
+				cb2(null, {meta : meta_data});
+			});
+		},
+	], function(err, ret_data) {
+		var res_dt = errorCodes.error_200.success;
+		delete res_dt.responseParams.count;
+		res_dt.responseParams.data = ret_data[0].data;
+		res_dt.responseParams.meta = ret_data[1].meta;
+		callback(null, res_dt);		
+	});
 }

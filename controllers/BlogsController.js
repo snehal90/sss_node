@@ -18,3 +18,12 @@ exports.updateBlog = function(request, response, callback) {
 		response.status(ret_data.responseHeaders.status).send(ret_data.responseParams);
 	}, request.body, unique_id);
 };
+
+exports.getBlogs = function(request, response, callback) {
+	blogs.getList(function(err, ret_data) {
+		if(err) {
+			return response.status(err.responseHeaders.status).send(err.responseParams);
+		}
+		response.status(ret_data.responseHeaders.status).send(ret_data.responseParams);
+	}, request.query);
+};

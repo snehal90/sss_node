@@ -35,6 +35,11 @@
 			"route" : "BlogsController:addBlog"
 		}
 	},
+	"/blog" : {
+		"GET" : {
+			"route" : "BlogsController:getBlogs"
+		}
+	},
 	"/blog/update/:unique_id" : {
 		"PUT" : {
 			"route" : "BlogsController:updateBlog"
