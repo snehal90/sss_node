@@ -4,6 +4,7 @@ var Checkit = require('checkit');
 var moment = require('moment');
 var async = require('async');
 var slug = require('slug');
+var mail_helper_obj = require('../helpers/mail_helper');
 var errorCodes = require('../config/error');
 
 exports.add = function(callback, data) {
@@ -144,6 +145,23 @@ exports.update = function(callback, data, unique_id) {
 		delete update_dt_list['unique_id'];
 		update_data['update'] = {'$set' : update_dt_list};
 		save(update_data, gallery_list, 1, callback);
+		if(data['blog_status'] == 1) {
+			var custom_query = {};
+			custom_query['unique_id'] = unique_id;
+			custom_query['limit'] = 1;
+			getList(function(err, res_data) {
+				if(err) {
+					callback(err);
+				} else {
+					var dt = res_data.responseParams.data;
+					var mail_data = {};
+					mail_data['to'] = dt[0].blog_author_email;
+					mail_data['subject'] = 'Shree Swami Samarth Info';
+					mail_data['body'] = 'Hello ' + dt[0].blog_author_name + ', <br/> Your blog with title "' + dt[0].blog_title + '" has been approved and now visible on site. Please visit our site again.';
+					mail_helper_obj.sendMail(mail_data);
+				}
+			}, custom_query);
+		}
 
 	}).catch(Checkit.Error, function(err) {
 		var error = errorCodes.error_400.custom_invalid_params;
@@ -152,7 +170,7 @@ exports.update = function(callback, data, unique_id) {
 	})
 }
 
-exports.getList = function(callback, query) {
+function getList(callback, query) {
 	var filter_qry = {};
 	var limit = 20;
 	var offset = 0;
@@ -209,3 +227,5 @@ exports.getList = function(callback, query) {
 		callback(null, res_dt);		
 	});
 }
+
+exports.getList = getList;

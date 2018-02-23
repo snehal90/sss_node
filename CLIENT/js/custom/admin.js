@@ -826,6 +826,9 @@ app.controller('BlogCtrl', function($scope, $http, CONFIGS, $timeout, Upload, $c
 				// $scope.existing_images = blog_list.images;
 				$('#content').code($scope.content);
 				$("#content").siblings(".note-editor").find(".note-editable").attr("contenteditable","false");
+                if(blog_list.blog_status != 0) {
+                    $('.blog_status').attr('disabled', 'disabled');
+                }
 				$scope.save_btn_action = 'update';
 				$scope.save_btn_text = "Update";
 			}
