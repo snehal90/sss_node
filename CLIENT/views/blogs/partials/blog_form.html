@@ -1,0 +1,117 @@
+<form enctype="multipart/form-data">
+    <div class="panel-body">
+        <div class="alert main_error_wrapper" role="alert" style="display:none;">
+            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+            <span id="error_container"></span>
+        </div>
+        <div class="form-group col-md-12">
+            <label class="col-md-3 col-xs-12 control-label">*Blog Title: </label>
+            <div class="col-md-6 col-xs-12">                                            
+                <input type="text" id="blog_title" ng-model="blog_title" class="blog_title form-control" placeholder="Enter Blog Title" ng-disabled="deactivate == 1">
+            </div>
+        </div>
+        <div class="form-group col-md-12" ng-show="deactivate == 1">
+            <label class="col-md-3 col-xs-12 control-label">Blog Author Name: </label>
+            <div class="col-md-6 col-xs-12">                                            
+                <label>{{blog_author_name}}</label>
+            </div>
+        </div>
+        <div class="form-group col-md-12" ng-show="deactivate == 1">
+            <label class="col-md-3 col-xs-12 control-label">Blog Author Email: </label>
+            <div class="col-md-6 col-xs-12">                                            
+                <label>{{blog_author_email}}</label>
+            </div>
+        </div>
+        <div class="form-group col-md-12">
+            <label class="col-md-3 col-xs-12 control-label">*Content: </label>
+            <div class="col-md-6 col-xs-12">
+                <textarea id="content" ng-model="content" class="content form-control"></textarea>
+            </div>
+        </div>
+      <!--   <div class="form-group col-md-12 start_dt_container">
+            <label class="col-md-3 col-xs-12 control-label">*Start Datetime: </label>
+            <div class="col-md-9 col-xs-12">
+                <div id="start_datetime_container" class="input-group col-md-8">
+                    <input type="text" id="start_date" ng-model="start_date" class="form-control start_date" data-date-format="yyyy-mm-dd" data-date-viewmode="years" placeholder='Select Start Date'>
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                    <input type="text" id="start_time" ng-model="start_time" class="form-control start_time" placeholder="Select Start Time">
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-md-12 end_dt_container">
+            <label class="col-md-3 col-xs-12 control-label">*End Datetime: </label>
+            <div class="col-md-9 col-xs-12">
+                <div id="end_datetime_container" class="input-group col-md-8">
+                    <input type="text" id="end_date" ng-model="end_date" class="form-control end_date" data-date-format="yyyy-mm-dd" data-date-viewmode="years" placeholder='Select End Date'>
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                    <input type="text" id="end_time" ng-model="end_time" class="form-control end_time" placeholder="Select End Time">
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
+                </div>
+            </div>
+        </div> -->
+        <div class="form-group col-md-12">
+            <label class="col-md-3 col-xs-12 control-label">*Is Active: </label>
+            <div class="col-md-4 col-xs-12">                                    
+                <label class="check"><div class="iradio_minimal-grey checked" style="position: relative;"><input type="radio" class="iradio is_active" ng-model="is_active" name="is_active" value="1" checked="checked"></div> Active</label>&nbsp;&nbsp;&nbsp;
+                <label id="is_active_container" class="check"><div class="iradio_minimal-grey " style="position: relative;"><input type="radio" ng-model="is_active" class="iradio is_active" name="is_active" value="0"></div>Inactive</label>
+            </div>
+        </div>
+        <div class="form-group col-md-12">
+            <label class="col-md-3 col-xs-12 control-label">*Blog Status: </label>
+            <div class="col-md-4 col-xs-12">                                    
+                <label class="check"><div class="iradio_minimal-grey checked" style="position: relative;"><input type="radio" class="iradio blog_status" ng-model="blog_status" name="blog_status" value="0" checked="checked"></div> Pending</label>&nbsp;&nbsp;&nbsp;
+                <label class="check"><div class="iradio_minimal-grey " style="position: relative;"><input type="radio" ng-model="blog_status" class="iradio blog_status" name="blog_status" value="1" checked></div>Approve</label>&nbsp;&nbsp;&nbsp;
+                <label id="blog_status_container" class="check"><div class="iradio_minimal-grey " style="position: relative;"><input type="radio" ng-model="blog_status" class="iradio blog_status" name="blog_status" value="2"></div>Reject</label>
+            </div>
+        </div>
+
+        <!-- <div class="form-group col-md-12">
+            <label class="col-md-3 col-xs-12 control-label">Images: </label>
+            <div class="col-md-6 col-xs-12">
+                <input type="file" id="images" name="images[]" class="form-control images" ngf-select="uploadFiles($files)" multiple accept="'image/*'"/>
+                <div class="gallery" id="links">
+                    <a ng-repeat="image in existing_images" class="gallery-item" href="{{location.protocol+image.image_path}}" title="{{image.image_path}}" data-gallery="">
+                        <div class="image">
+                            <span class="helper"></span>
+                            <img ng-src="{{location.protocol  + utilService.formatImagePath(image.image_path, 'THUMB')}}" alt="{{location.protocol+utilService.formatImagePath(image.image_path, 'THUMB')}}" onerror="this.src='/assets/images/no_image_default.png'">    
+                            <ul class="gallery-item-controls">
+                                <li><span class="file_remove" data-path="{{location.protocol+image.path}}" title="Click to remove image"><i class="fa fa-times"></i></span></li>
+                            </ul>                                                                    
+                        </div>                            
+                    </a>
+                </div>
+            </div>
+        </div> -->
+    </div>
+    <div class="panel-footer" style="text-align:center;">
+        <button id="add_blog" class="btn btn-success btn-lg" ng-click="this[save_btn_action](unique_id)">{{save_btn_text}}</button>
+    </div>
+</form>
+<!-- BLUEIMP GALLERY -->
+<div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls">
+    <div class="slides"></div>
+    <a class="prev">‹</a>
+    <a class="next">›</a>
+    <a class="close">×</a>
+    <a class="play-pause"></a>
+    <ol class="indicator"></ol>
+</div>      
+<!-- END BLUEIMP GALLERY -->
+<script type="text/javascript">
+console.log(location.protocol, ":::::location.protocol");
+$('#content').summernote(
+{
+    height: 150,
+    codemirror: {
+        mode: 'text/html',
+        htmlMode: true,
+        lineNumbers: true,
+        theme: 'default'
+    }
+});
+// $("#start_time").timepicker({minuteStep: 1,showMeridian: false, defaultTime: '', appendWidgetTo : '#start_datetime_container'});
+// $("#end_time").timepicker({minuteStep: 1,showMeridian: false, defaultTime: '', appendWidgetTo : '#end_datetime_container'});
+// $(".start_date").datepicker({format: 'yyyy-mm-dd', container : '.start_dt_container'});  
+// $(".end_date").datepicker({format: 'yyyy-mm-dd', container : '.end_dt_container'});  
+</script>

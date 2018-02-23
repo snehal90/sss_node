@@ -60,6 +60,37 @@ app.config(['$stateProvider', '$urlRouterProvider', '$cssProvider', '$locationPr
 	        })
 		},
 		controller : 'EventCtrl'
+	}).state('admin.blogs', {
+		url: '/blogs',
+		templateUrl : '/views/blogs/list.html',
+		css: ['/css/theme-default.css'],
+		onEnter: function($rootScope, $timeout, $stateParams) { 
+			$timeout(function() {
+	            $rootScope.$broadcast('blogListView');
+			}, 500);
+		},
+		controller : 'BlogCtrl'
+	}).state('admin.blogs_create', {
+		url: '/blogs/create',
+		templateUrl : '/views/blogs/create_view.html',
+		css: ['/css/theme-default.css'],
+		onEnter: function($rootScope, $timeout, $stateParams) { 
+			$timeout(function() {
+	            $rootScope.$broadcast('createView');
+	        })
+		},
+		controller : 'BlogCtrl'
+	}).state('admin.blogs_edit', {
+		url: '/blogs/:unique_id',
+		templateUrl : '/views/blogs/edit_view.html',
+		css: ['/css/theme-default.css'],
+
+		onEnter: function($rootScope, $timeout, $stateParams) { 
+			$timeout(function() {
+	            $rootScope.$broadcast('editView', $stateParams.unique_id);
+	        })
+		},
+		controller : 'BlogCtrl'
 	});
     // $urlRouterProvider.otherwise('/404');
 	$locationProvider.html5Mode(true);
@@ -574,6 +605,305 @@ app.controller('EventCtrl', function($scope, $http, CONFIGS, $timeout, Upload, $
 				gallery_list = [];
 				setTimeout(function() {
 					location.href = $scope.base_url + 'admin/events';
+				}, 1000);
+
+			} else {
+				if(typeof ret_dt.message == 'string') {
+					$('.main_error_wrapper').find('#error_container').text(ret_dt.message);
+					$('.main_error_wrapper').addClass('alert-danger').show();
+				} else {
+
+				}
+				$('html, body').animate({
+					scrollTop : $('.page-content-wrap').offset().top
+				}, 'slow');
+			}
+		});
+	}
+
+});
+
+app.controller('BlogCtrl', function($scope, $http, CONFIGS, $timeout, Upload, $compile, $rootScope, $cookies) {
+	$scope.page_heading = "Blogs";
+	$scope.save_btn_action = 'addBlog';
+	$scope.save_btn_text = "Save";
+	var link = $scope.base_url + 'admin/blogs/{unique_id}';
+	var filter_list = {};
+
+	// $timeout(function() {
+	// 	blog_list_table({});
+	// }, 500);
+	$scope.$on('blogListView', function(event) {
+		blog_list_table({});
+	});
+
+	$scope.filter_clicked = function(key, $event, event_type, value) {
+		if(event_type == 'keyup') {
+			$event.stopPropagation();
+			$event.preventDefault();
+			if($event.keyCode == 13 || $.trim(value) == '') {
+				filter_list[key] = $.trim(value);
+				if($.trim(value) == '') {
+					delete filter_list[key];
+				}
+				blog_list_table(filter_list);
+			}
+		} else if(event_type == 'change') {
+			filter_list[key] = $.trim(value);
+			if($.trim(value) == '') {
+				delete filter_list[key];
+			}
+			blog_list_table(filter_list);
+		}
+	};
+
+	function blog_list_table(filter_list) {
+		var url = '/api/v1/blog';
+
+		var req_data = {};
+		req_data['url'] = url;
+		req_data['req_list'] = JSON.stringify(["unique_id", "blog_title", "is_active"]);
+		req_data['id_link'] = encodeURIComponent(link);
+		req_data['filter_list'] = JSON.stringify(filter_list);
+		req_data['req_type'] = 'BLOG';
+
+		getTableJson(function(ret_data) {
+			console.log(ret_data['aaData']);
+			$("#blogs_list").dataTable({
+				"bDestroy": true,
+				// "bProcessing": true,
+			    // "bServerSide": true,
+			    "bSortClasses": false,
+			    "bAutoWidth": false,
+			    "bLengthChange": false,
+			    "iDisplayLength": 20,
+			    "aaData": ret_data['aaData'],
+			    "aoColumns": [
+			    	{"bSortable": false, "bSearchable": false}, //uniqueId
+			    	{"bSortable": false, "bSearchable": false}, //name
+			    	// {"bSortable": false, "bSearchable": false}, //start_date
+			    	// {"bSortable": false, "bSearchable": false}, //end_date
+			    	{"bSortable": false, "bSearchable": false}, //is_active
+			    	// {"bSortable": false, "bSearchable": false}, //type
+			    	{"bSortable": false, "bSearchable": false} //active/inactive update
+			    ],
+			    "fnInitComplete": function(settings, json) {
+					var updateStatus = angular.element($('.update_status'));
+					updateStatus.bind('click', $scope.statusUpdate);
+				}
+			});
+		}, req_data);
+
+		$("#blogs_list_filter").hide();
+	}
+
+	$scope.uploadFiles = function (files) {
+        $scope.files = files;
+        if (files && files.length) {
+            Upload.upload({
+                // url: CONFIGS.api_url + 'fileUpload',
+                url: '/api/v1/fileUpload',
+                method: 'post',
+                data: {
+                    files: files,
+                    type: 'BLOG'
+                }
+            }).then(function (response) {
+                if(response.data.status == 'success') {
+                	images_list.push.apply(images_list, response.data.data.images_list);
+                	gallery_list.push.apply(gallery_list, response.data.data.gallery_list);
+                }
+            });
+        }
+    };
+
+	$scope.addBlog = function() {
+		$('label.error').remove();
+		var blog_title = $.trim($('#blog_title').val());
+		var content = $.trim($('#content').code());
+		var fname = $cookies.get('user_first_name');
+		var lname = $cookies.get('user_last_name');
+		var author_email = $cookies.get('user_email');
+		var author_name = fname + ' ' + lname;
+		if($.trim(author_name) == '') {
+			author_name = 'Admin';
+		}
+		var is_active = $.trim($('.is_active:checked').val());
+		var blog_status = $.trim($('.blog_status:checked').val());
+		// var images = files_dt.length != 0 ? files_dt : {};
+		var error_msg = {};
+		if(blog_title == '') {
+			error_msg['#blog_title'] = 'Please enter blog title';
+		}
+
+		if($.trim(String(content).replace(/<[^>]+>/gm, '')) == '') {
+			error_msg['#content'] = 'Please enter content';
+		}
+
+		if(is_active == '' || is_active == undefined) {
+			error_msg['#is_active_container'] = 'Please select whether blog is active or inactive';
+		}
+
+		if(blog_status == '' || blog_status == undefined) {
+			error_msg['#blog_status_container'] = 'Please select blog status';
+		}
+
+		console.log(error_msg, "::::error_msg");
+		if(Object.keys(error_msg).length != 0) {
+			showError(error_msg);
+		} else {
+
+			var post_data = {};
+
+			post_data = {
+				blog_title : blog_title,
+				content : content,
+				blog_author_name : author_name,
+				blog_author_email : author_email,
+				blog_status : blog_status,
+				is_active : is_active,
+			};
+
+			// if(images_list.length != 0) {
+			// 	post_data['images'] = images_list;
+			// }
+
+			// if(gallery_list.length != 0) {
+			// 	post_data['gallery'] = gallery_list;
+			// }
+
+			console.log(post_data, "::::post_data");
+			// return false;
+
+			$('label.error').remove();
+			$http({
+				url : '/api/v1/blog/add',
+				method : 'post',
+				data : post_data
+			}).success(function(ret_dt) {
+				if(ret_dt.status == 'success') {
+					$('.main_error_wrapper').hide();
+					$('#message-box-success').show();
+					// images_list = [];
+					// gallery_list = [];
+					setTimeout(function() {
+						location.href = $scope.base_url + 'admin/blogs';
+					}, 1000);
+
+				} else {
+					if(typeof ret_dt.message == 'string') {
+						$('.main_error_wrapper').find('#error_container').text(ret_dt.message);
+						$('.main_error_wrapper').addClass('alert-danger').show();
+					} else {
+
+					}
+					$('html, body').animate({
+						scrollTop : $('.page-content-wrap').offset().top
+					}, 'slow');
+				}
+				console.log(ret_dt, "::::ret_dt");
+			});
+		}
+	};
+
+	$scope.$on('editView', function(event, unique_id) {
+
+	    $http({
+			url : '/api/v1/blog/?unique_id=' + unique_id,
+			method : 'get',
+		}).success(function(ret_dt) {
+			if(ret_dt.status == 'success') {
+				var blog_list = ret_dt.data[0];
+				$scope.deactivate = 1;
+				$scope.blog_title = blog_list.blog_title;
+				$scope.unique_id = unique_id;
+				$scope.content = blog_list.content;
+				
+				$scope.is_active = blog_list.is_active;
+				$scope.blog_status = blog_list.blog_status;
+				$scope.blog_author_name = blog_list.blog_author_name;
+				$scope.blog_author_email = blog_list.blog_author_email;
+				// $scope.existing_images = blog_list.images;
+				$('#content').code($scope.content);
+				$("#content").siblings(".note-editor").find(".note-editable").attr("contenteditable","false");
+				$scope.save_btn_action = 'update';
+				$scope.save_btn_text = "Update";
+			}
+		});
+	});
+
+	$scope.removeImage = function($event) {
+		var image_path = $($event.target).attr('data_path');
+		remove_images_list[remove_images_list.length] = remove_images_list;
+	};
+
+	$scope.statusUpdate = function($event) {
+		var id = $($event.target).closest('.update_status').attr('data_unique_id');
+		var attr_rel = $($event.target).closest('.update_status').attr('rel');
+		var is_active = attr_rel == 1 ? 0 : 1;
+
+		$scope.update(id, {'is_active' : is_active});
+	};
+
+
+	$scope.update = function(id, post_data) {
+		$('label.error').remove();
+		if(post_data == undefined) {
+			var is_active = $.trim($('.is_active:checked').val());
+			var blog_status = $.trim($('.blog_status:checked').val());
+			var error_msg = {};
+			if(is_active == '' || is_active == undefined) {
+				error_msg['#is_active_container'] = 'Please select whether blog is active or inactive';
+			}
+
+			if(blog_status == '' || blog_status == undefined) {
+				error_msg['#blog_status_container'] = 'Please select blog status';
+			}
+
+			console.log(error_msg, "::::error_msg");
+			if(Object.keys(error_msg).length != 0) {
+				showError(error_msg);
+			} else {
+
+				var post_data = {};
+
+				post_data = {
+					is_active : is_active,
+					blog_status : blog_status,
+				};
+
+				// if(images_list.length != 0) {
+				// 	post_data['images'] = images_list;
+				// }
+
+				// if(gallery_list.length != 0) {
+				// 	post_data['gallery'] = gallery_list;
+				// }
+
+				console.log(post_data, "::::post_data");
+				// return false;
+
+				$('label.error').remove();
+			}
+		}
+
+		// if(remove_images_list.length != 0) {
+		// 	post_data['remove_images'] = remove_images_list;
+		// }
+
+		$http({
+			url : '/api/v1/blog/update/' + id,
+			method : 'put',
+			data : post_data
+		}).success(function(ret_dt) {
+			console.log(ret_dt, ":::::ret_dt");
+			if(ret_dt.status == 'success') {
+				$('.main_error_wrapper').hide();
+				$('#message-box-success').show();
+				// images_list = [];
+				// gallery_list = [];
+				setTimeout(function() {
+					location.href = $scope.base_url + 'admin/blogs';
 				}, 1000);
 
 			} else {
