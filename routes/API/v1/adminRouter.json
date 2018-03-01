@@ -44,5 +44,20 @@
 		"PUT" : {
 			"route" : "BlogsController:updateBlog"
 		}
+	},
+	"/cms/add" : {
+		"POST" : {
+			"route" : "CMSController:addCMSPage"
+		}
+	},
+	"/cms" : {
+		"GET" : {
+			"route" : "CMSController:getPagesList"
+		}
+	},
+	"/cms/update/:unique_id" : {
+		"PUT" : {
+			"route" : "CMSController:updateCMSPage"
+		}
 	}
 }
