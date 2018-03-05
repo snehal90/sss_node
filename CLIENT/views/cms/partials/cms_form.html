@@ -1,0 +1,111 @@
+<form enctype="multipart/form-data">
+    <div class="panel-body">
+        <div class="alert main_error_wrapper" role="alert" style="display:none;">
+            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+            <span id="error_container"></span>
+        </div>
+        <div class="form-group col-md-12">
+            <label class="col-md-3 col-xs-12 control-label">*Select Content Type: </label>
+            <div class="col-md-6 col-xs-12">
+                <select id="content_type" ng-model="content_type" class="content_type form-control" ng-change="changeContentType()">
+                    <option value="">-- Select Content Type --</option>
+                    <option value="SWAMI_LEELA">Swami Leela</option>
+                    <option value="SWAMI_VACHAN">Swami Vachan</option>
+                    <option value="HOME" rel="others">Home</option>
+                    <option value="CONTACT_US" rel="others">Contact Us</option>
+                    <option value="ABOUT_US" rel="others">About Us</option>
+                </select>
+            </div>
+            <input type="hidden" name="content_type_hidden" id="content_type_hidden" ng-model="content_type" value="{{content_type}}"/>
+        </div>
+        <div id="cms_form">
+            <div class="form-group col-md-12">
+                <label class="col-md-3 col-xs-12 control-label">*Title: </label>
+                <div class="col-md-6 col-xs-12">                                            
+                    <input type="text" id="title" ng-model="title" class="title form-control" placeholder="Enter Title">
+                </div>
+            </div>
+            <div class="form-group col-md-12">
+                <label class="col-md-3 col-xs-12 control-label">Short Description: </label>
+                <div class="col-md-6 col-xs-12">                                            
+                    <textarea id="short_description" ng-model="short_description" placeholder="Enter Short Description" class="short_description form-control"></textarea>
+                </div>
+            </div>
+            <div class="form-group col-md-12">
+                <label class="col-md-3 col-xs-12 control-label">*Content: </label>
+                <div class="col-md-6 col-xs-12">
+                    <textarea id="content" ng-model="content" class="content form-control"></textarea>
+                </div>
+            </div>
+            <div class="form-group col-md-12">
+                <label class="col-md-3 col-xs-12 control-label">*Is Active: </label>
+                <div class="col-md-4 col-xs-12">                                    
+                    <label class="check"><div class="iradio_minimal-grey checked" style="position: relative;"><input type="radio" class="iradio is_active" ng-model="is_active" name="is_active" value="1" checked="checked"></div> Active</label>&nbsp;&nbsp;&nbsp;
+                    <label id="is_active_container" class="check"><div class="iradio_minimal-grey " style="position: relative;"><input type="radio" ng-model="is_active" class="iradio is_active" name="is_active" value="0"></div>Inactive</label>
+                </div>
+            </div>
+
+            <div class="form-group col-md-12">
+                <label class="col-md-3 col-xs-12 control-label">Images: </label>
+                <div class="col-md-6 col-xs-12">
+                    <input type="file" id="images" name="images[]" class="form-control images" ngf-select="uploadFiles($files)" multiple accept="'image/*'"/>
+                    <div class="gallery" id="links">
+                        <a ng-repeat="image in existing_images" class="gallery-item" href="{{location.protocol+image.image_path}}" title="{{image.image_path}}" data-gallery="">
+                            <div class="image">
+                                <span class="helper"></span>
+                                <img ng-src="{{location.protocol  + utilService.formatImagePath(image.image_path, 'THUMB')}}" alt="{{location.protocol+utilService.formatImagePath(image.image_path, 'THUMB')}}" onerror="this.src='/assets/images/no_image_default.png'">    
+                                <ul class="gallery-item-controls">
+                                    <li><span class="file_remove" data-path="{{location.protocol+image.path}}" title="Click to remove image"><i class="fa fa-times"></i></span></li>
+                                </ul>                                                                    
+                            </div>                            
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group col-md-12 show_on_others" ng-hide="content_type == 'SWAMI_LEELA' || content_type == 'SWAMI_VACHAN'">
+                <label class="col-md-3 col-xs-12 control-label">*Background Image: </label>
+                <div class="col-md-6 col-xs-12">
+                    <input type="file" id="bg_images" name="bg_images" class="form-control bg_images" ngf-select="uploadFiles($files, 1)" multiple accept="'image/*'"/>
+                    <div class="gallery" id="links">
+                        <a ng-repeat="image in existing_bg_images" class="gallery-item" href="{{location.protocol+image.image_path}}" title="{{image.image_path}}" data-gallery="">
+                            <div class="image">
+                                <span class="helper"></span>
+                                <img ng-src="{{location.protocol  + utilService.formatImagePath(image.image_path, 'THUMB')}}" alt="{{location.protocol+utilService.formatImagePath(image.image_path, 'THUMB')}}" onerror="this.src='/assets/images/no_image_default.png'">    
+                                <ul class="gallery-item-controls">
+                                    <li><span class="file_remove" data-path="{{location.protocol+image.path}}" title="Click to remove image"><i class="fa fa-times"></i></span></li>
+                                </ul>                                                                    
+                            </div>                            
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel-footer" style="text-align:center;">
+        <button id="add_cms_page" class="btn btn-success btn-lg" ng-click="this[save_btn_action](unique_id)">{{save_btn_text}}</button>
+    </div>
+</form>
+<!-- BLUEIMP GALLERY -->
+<div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls">
+    <div class="slides"></div>
+    <a class="prev">‹</a>
+    <a class="next">›</a>
+    <a class="close">×</a>
+    <a class="play-pause"></a>
+    <ol class="indicator"></ol>
+</div>      
+<!-- END BLUEIMP GALLERY -->
+<script type="text/javascript">
+console.log(location.protocol, ":::::location.protocol");
+$('#content').summernote(
+{
+    height: 150,
+    codemirror: {
+        mode: 'text/html',
+        htmlMode: true,
+        lineNumbers: true,
+        theme: 'default'
+    }
+});
+</script>

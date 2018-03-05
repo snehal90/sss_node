@@ -61,6 +61,7 @@ function getTableJson(callback, req_data) {
     var req_type = req_data['req_type'] != undefined ? req_data['req_type'] : 'EVENT';
     var sort_col = req_data['iSortCol_0'] != undefined ? req_data['iSortCol_0'] : '';
     var sort_val = req_data['sSortDir_0'] != undefined ? req_data['sSortDir_0'] : 'asc';
+    var content_type = req_data['content_type'] != undefined ? req_data['content_type'] : '';
     sort_val = sort_val == 'asc' ? 1 : -1;
     var id_link = req_data['id_link'] != undefined ? decodeURIComponent(req_data['id_link']) : '';
     var filter_list = req_data['filter_list'] != undefined ? JSON.parse(req_data['filter_list']) : {};
@@ -82,6 +83,10 @@ function getTableJson(callback, req_data) {
         url += '&' + filter_key + '=' + encodeURIComponent(filter_list[filter_key]);
     }
 
+    if(content_type != '') {
+        url += '&content_type=' + content_type; 
+    }
+    
     var ucfirst_arr = ['type'];
     console.log(url, "::::req_list");
     $.ajax({
@@ -109,7 +114,7 @@ function getTableJson(callback, req_data) {
                             var str_to_replace = '{unique_id}';
                             var link_dt = '#';
                             link_dt = id_link.replace(str_to_replace, data[param]);
-                            dt[dt.length] = '<a href="' + link_dt + '">' + data[param] + '</a>';
+                            dt[dt.length] = '<a href="' + link_dt + '?content_type=' + content_type + '">' + data[param] + '</a>';
                         } else if(param == 'start_date' || param == 'end_date') {
                             // dt[] = date('Y-m-d H:i', strtotime(data[param]));
                             var d = new Date(data[param]),
@@ -130,7 +135,7 @@ function getTableJson(callback, req_data) {
                             dt[dt.length] = data[param];
                         }
                     }
-                    dt[dt.length] = '<div class="update_active update_status" rel="' + data['is_active'] + '" type="' + req_type + '" data_unique_id="' + data['unique_id'] + '">' + (data['is_active'] == 1 ? '<label class="switch switch-small" title="Click to deactivate this record"><input type="checkbox" checked="" value="1"><span></span></label>' : '<label class="switch switch-small" title="Click to activate this record"><input type="checkbox" value="1"><span></span></label>' ) + '</div>';
+                    dt[dt.length] = '<div class="update_active update_status" rel="' + data['is_active'] + '" type="' + req_type + '" data_unique_id="' + data['unique_id'] + '" data_content_type="' + content_type + '">' + (data['is_active'] == 1 ? '<label class="switch switch-small" title="Click to deactivate this record"><input type="checkbox" checked="" value="1"><span></span></label>' : '<label class="switch switch-small" title="Click to activate this record"><input type="checkbox" value="1"><span></span></label>' ) + '</div>';
 
                     data_list[data_list.length] = dt;
                 }

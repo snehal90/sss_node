@@ -7,7 +7,7 @@ var async = require('async');
 var gallery = require('../models/gallery');
 
 Checkit.Validator.prototype.checkEnum = function(val) {
-	var valid_pages = ['SWAMI_LEELA', 'SWAMI_VACHAN', 'HOME', 'CONTACT_US', 'ABOUT_US'];
+	var valid_pages = ['SWAMI_LEELA', 'SWAMI_VACHAN', 'HOME', 'CONTACT_US', 'ABOUT_US', 'OTHERS'];
 	if(_.indexOf(valid_pages, val) == -1) {
 		throw new Error('The content type should be valid');
 	}
@@ -46,7 +46,7 @@ exports.addCMSPage = function(callback, data) {
 			}
 		};
 		if(_.indexOf(['SWAMI_VACHAN', 'SWAMI_LEELA'], data['content_type'].toUpperCase()) == -1) {
-			rules['bg_image'] = {
+			rules['bg_images'] = {
 				rule : 'required',
 				message : 'Please provide the background image'
 			};
@@ -123,8 +123,10 @@ exports.updateCMSPage = function(callback, data, unique_id) {
 			var delete_data = {};
 			delete_data.update = {};
 			delete_data.condition = update_data.condition;
+			delete_data.condition['content_type'] = data['content_type'];
 
 			delete_data.update = remove_images;
+			console.log(delete_data, ":::::delete_data");
 			deleteImages(function() {}, delete_data.update, delete_data.condition);
 			delete data['remove_images'];
 		}
@@ -133,13 +135,28 @@ exports.updateCMSPage = function(callback, data, unique_id) {
 		}
 		
 		delete data['gallery'];
+		var push_images = {};
 		if(data['images'] && data['images'].length != 0) {
-			update_data.update['$push'] = {'images' : { '$each' : data['images']}};
-			delete data['images'];
+			push_images['images'] = { '$each' : data['images']};
+			// update_data.update['$push'] = {'images' : { '$each' : data['images']}, 'bg_images' : { '$each' : data['bg_images']}};
+			// delete data['images'];
 			// save(update_data, gallery_list, 1, callback);
+		}
+		if(data['bg_images'] && data['bg_images'].length != 0) {
+			push_images['bg_images'] = { '$each' : data['bg_images']};
+			// update_data.update['$push'] = {'bg_images' : { '$each' : data['bg_images']}};
+			// delete data['bg_images'];
+			// save(update_data, gallery_list, 1, callback);
+		}
+		if(Object.keys(push_images).length != 0) {
+			console.log(push_images, "::::::push_images");
+			update_data.update['$push'] = push_images;
+			delete data['images'];
+			delete data['bg_images'];
 		}
 		update_data.update['$set'] = data;
 		update_data['content_type'] = data['content_type'];
+			console.log(update_data, "::::::update_data");
 		save(update_data, gallery_list, 1, callback);
 	}).catch(Checkit.Error, function(err) {
 		var error = errorCodes.error_400.custom_invalid_params;
@@ -149,7 +166,7 @@ exports.updateCMSPage = function(callback, data, unique_id) {
 };
 
 function save (data, gallery_list, is_update, callback) {
-	var collection_name = data['content_type'].toLowerCase();
+	var collection_name = _.indexOf(['HOME', 'CONTACT_US', 'ABOUT_US', 'OTHERS'], data['content_type'].toUpperCase()) != -1 ? 'cms' : data['content_type'].toLowerCase();
 	var collection = db.collection(collection_name);
 	if(is_update == 0) {
 		collection.insert(data, {}, function(err, dt) {
@@ -169,6 +186,7 @@ function save (data, gallery_list, is_update, callback) {
 	} else {
 		collection.update(data.condition, data.update, function(err, dt) {
 			console.log(err, ":::err");
+			console.log(dt, ":::dt");
 			if(err) {
 				var error = errorCodes.error_403.server_error;
 				callback(error);
@@ -219,12 +237,15 @@ exports.getPagesList = function (callback, data) {
 
 		offset = (page - 1) * limit;
 
-		var collection_name = _.indexOf(['HOME', 'CONTACT_US', 'ABOUT_US'], collection_name) != -1 ? 'cms' : data['content_type'].toLowerCase();
+		var collection_name = _.indexOf(['HOME', 'CONTACT_US', 'ABOUT_US', 'OTHERS'], data['content_type'].toUpperCase()) != -1 ? 'cms' : data['content_type'].toLowerCase();
+		console.log(collection_name, ":::::collection_name");
 		var collection = db.collection(collection_name);
 
 		async.parallel([
 			function(cb1) {
+					console.log(qry, ":::::qry");
 				collection.find(qry, {}).limit(limit).skip(offset).toArray(function(err, data_list) {
+					console.log(data_list, ":::::data_list");
 					if(err) {
 						var error = errorCodes.error_403.server_error;
 						callback(error);
@@ -261,3 +282,24 @@ exports.getPagesList = function (callback, data) {
 	  	callback(error);
 	})
 }
+
+
+function deleteImages (callback, images_data, images_condition) {
+	var collection_name = _.indexOf(['HOME', 'CONTACT_US', 'ABOUT_US', 'OTHERS'], images_condition['content_type'].toUpperCase()) != -1 ? 'cms' : images_condition['content_type'].toLowerCase();
+	var collection = db.collection(collection_name);
+    collection.update(images_condition, {'$pull' : {'images' : {'path' : {'$in' : images_data}}, 'bg_images' : {'path' : {'$in' : images_data}}}}, function(err, res_dt) {
+
+    	if(err) {
+    		var error = errorCodes.error_403.server_error;
+			callback(error);
+    	} else {
+			gallery.update(function() {}, {'$set' : {'is_active' : 0}}, {'path': {'$in' : images_data}});
+			var utils_controller = require('../controllers/UtilController');
+			var req = {};
+			req['body'] = {'file_paths' : JSON.stringify(images_data)};
+			utils_controller.deleteFiles(req);
+			var result_response = errorCodes.error_200.success;
+			callback(null, result_response);
+		}
+    });
+};
