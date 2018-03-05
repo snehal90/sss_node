@@ -137,6 +137,9 @@ app.run(function($rootScope, $window, $http, CONFIGS, utilService, $cookies) {
 		for(var x in images_list) {
 			file_paths[file_paths.length] = images_list[x].path;
 		}
+		for(var x in bg_images_list) {
+			file_paths[file_paths.length] = bg_images_list[x].path;
+		}
 		remove_images_list = [];
 		$.ajax({
 			// url : CONFIGS.api_url + 'deleteFiles',
@@ -150,6 +153,7 @@ app.run(function($rootScope, $window, $http, CONFIGS, utilService, $cookies) {
 
 			if(ret_dt.status == 'success') {
 				images_list = [];
+				bg_images_list = [];
 				gallery_list = [];
 			}
 			return null;
