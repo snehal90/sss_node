@@ -13,21 +13,30 @@
             
             <!-- logo -->
             <h1 class="navbar-brand">
-                <a href="#body">Shree Swami Samarth</a>
+                <a href="/">Shree Swami Samarth</a>
             </h1>
             <!-- /logo -->
         </div>
 
         <!-- main nav -->
         <nav class="collapse navbar-collapse navbar-right" role="navigation">
-            <ul id="nav" class="nav navbar-nav">
-                <li><a href="#body">Home</a></li>
+            <ul id="nav" class="nav navbar-nav" ng-show="is_home == 1">
+                <li><a href="/">Home</a></li>
                 <li><a href="#">Swami Sadhana</a></li>
                 <li><a href="#">Swami Leela</a></li>
                 <li><a href="#features">Events</a></li>
                 <li><a href="#features">Blogs</a></li>
-                <li><a href="#">Gallery</a></li>
+                <li><a href="/gallery">Gallery</a></li>
                 <li><a href="#contact">Contact</a></li>
+            </ul>
+            <ul id="nav" class="nav navbar-nav" ng-show="is_home != 1">
+                <li><a href="/">Home</a></li>
+                <li><a href="/swami_sadhana">Swami Sadhana</a></li>
+                <li><a href="/swami_leela">Swami Leela</a></li>
+                <li><a href="/events">Events</a></li>
+                <li><a href="/blogs">Blogs</a></li>
+                <li><a href="/gallery">Gallery</a></li>
+                <li><a href="/#contact">Contact</a></li>
             </ul>
         </nav>
         <!-- /main nav -->

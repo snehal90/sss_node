@@ -208,8 +208,7 @@ function getList(callback, query) {
 						qry['start_date'] = {'$gt' : moment().format()};
 						qry['end_date'] = {'$gt' : moment().format()};
 					} else if(query[i].toLowerCase() == 'past') {
-						qry['start_date'] = {'$lt' : moment().format()};
-						qry['end_date'] = {'$lt' : moment().format()};
+						qry['$or'] = [{'start_date' : {'$lt' : moment().format()}}, {'end_date': {'$lt' : moment().format()}}];
 					}
 				} else if(i == 'is_active') {
 					qry[i] = parseInt(query[i], 10);

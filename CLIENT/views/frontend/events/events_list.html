@@ -1,0 +1,42 @@
+<div>
+    <section id="features">
+        <div class="container">
+            <div class="row">
+                <div class="sec-title text-center">
+                	<h2>EVENTS</h2>
+                </div>
+
+                <div class="col-sm-11 text-right">
+                    <div class="service-item">
+                        <input type="radio" name="event_type" id="event_type_past" class="event_type event_past" ng-click="event_type_change('past')"/> Past
+                        <input type="radio" name="event_type" id="event_type_upcoming" class="event_type event_upcoming" checked  ng-click="event_type_change('upcoming')" /> Upcoming
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="upcoming_events" ng-show="upcoming_events_list.length != 0">
+        <div class="container">
+            <div class="row">
+                <ul class="project-wrapper wow animated fadeInUp">
+                    <li class="portfolio-item" ng-repeat="event_dt in upcoming_events_list">
+                        <a href="#" >
+                        	{{
+                        		images_path = event_dt.images.length == 0 ? '/uploads/fake.jpg': utilService.formatImagePath(event_dt.images[0].image_path, 'MID'); ""
+                        	}}
+                            <img ng-src="{{images_path}}" class="img-responsive" alt="{{event_dt.name}}" onerror="this.src='/assets/images/no_image_default.png'" />
+                        </a>
+                        <figcaption class="mask">
+                            <h3>{{event_dt.name}}</h3>
+                            <p>{{event_dt.short_description}}</p>
+                        </figcaption>
+                        <ul class="external">
+                            <li><a class="fancybox" title="{{event_dt.name}}" data-fancybox-group="works" href="{{images_path}}" onerror="this.href='/assets/images/no_image_default.png'" onclick="return false;" ><i class="fa fa-search"></i></a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+</div>
