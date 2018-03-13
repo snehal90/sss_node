@@ -162,6 +162,10 @@ main > section {
     margin-bottom: 50px;
 }
 
+.internal-page-title {
+    margin-bottom: 15px;
+}
+
 .sec-title.white {
     color: #fff;
 }
@@ -174,11 +178,19 @@ main > section {
     text-transform: uppercase;
 }
 
+.internal-page-title h2 {
+    font-size: 36px;
+    margin: 0 0 30px;
+    padding-bottom: 15px;
+    position: relative;
+    text-transform: uppercase;
+}
+
 .sec-title.white h2 {
     color: #fff;
 }
 
-.sec-title h2:after {
+.sec-title h2:after, .internal-page-title h2:after {
     border-bottom: 1px solid #009ee3;
     content: "";
     display: block;
@@ -188,7 +200,7 @@ main > section {
     width: 115px;
 }
 
-.sec-title.white h2:after {
+.sec-title.white h2:after, .internal-page-title.white h2:after {
     border-bottom: 1px solid #fff;
 }
 
