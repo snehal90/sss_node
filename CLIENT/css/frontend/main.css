@@ -211,6 +211,10 @@ main > section {
     background-size: cover;
 }
 
+.event_list_title .event_type {
+    margin-left : 10px;
+}
+
 
 /**
 /*	Preloader
