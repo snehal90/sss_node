@@ -114,7 +114,7 @@ function getTableJson(callback, req_data) {
                             var str_to_replace = '{unique_id}';
                             var link_dt = '#';
                             link_dt = id_link.replace(str_to_replace, data[param]);
-                            dt[dt.length] = '<a href="' + link_dt + '?content_type=' + content_type + '">' + data[param] + '</a>';
+                            dt[dt.length] = '<a href="' + link_dt + (content_type != '' && content_type != undefined ? '?content_type=' + content_type : '') + '">' + data[param] + '</a>';
                         } else if(param == 'start_date' || param == 'end_date') {
                             // dt[] = date('Y-m-d H:i', strtotime(data[param]));
                             var d = new Date(data[param]),

@@ -8,8 +8,8 @@
 
                 <div class="col-sm-11 text-right">
                     <div class="service-item">
-                        <input type="radio" name="event_type" id="event_type_past" class="event_type event_past" ng-click="event_type_change('past')"/> Past
-                        <input type="radio" name="event_type" id="event_type_upcoming" class="event_type event_upcoming" checked  ng-click="event_type_change('upcoming')" /> Upcoming
+                        <input type="radio" name="event_type" id="event_type_past" value="past" class="event_type event_past" ng-click="event_type_change('past')"/> Past
+                        <input type="radio" name="event_type" id="event_type_upcoming" class="event_type event_upcoming" checked value="upcoming" ng-click="event_type_change('upcoming')" /> Upcoming
                     </div>
                 </div>
             </div>
@@ -17,9 +17,9 @@
     </section>
 
     <section id="upcoming_events">
-        <div class="container">
+        <div class="container scroll_container" data_page="1" data_page_count="{{page_count}}" data_page_type="event">
             <div class="row" ng-if="upcoming_events_list.length != 0">
-                <ul class="project-wrapper wow animated fadeInUp">
+                <ul class="project-wrapper wow animated fadeInUp list_wrapper">
                     <li class="portfolio-item" ng-repeat="event_dt in upcoming_events_list">
                         <a href="#" >
                         	{{
