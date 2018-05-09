@@ -12,6 +12,16 @@ app1.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', functi
 	            $rootScope.$broadcast('homeData');
 	        })
 		}
+	}).state('events_details', {
+		url: '/events/:unique_id',
+		templateUrl : '/views/frontend/events/event_details.html',
+		controller : 'EventsFrontendCtrl',
+
+		onEnter: function($rootScope, $timeout, $stateParams) { 
+			$timeout(function() {
+	            $rootScope.$broadcast('getEventDetails', $stateParams.unique_id);
+	        })
+		}
 	}).state('events', {
 		url: '/events',
 		templateUrl : '/views/frontend/events/events_list.html',
@@ -33,6 +43,14 @@ app1.run(function($rootScope, $window, $http, CONFIGS, utilService) {
 	$window.addEventListener('load', function() {
 		$("#preloader").fadeOut("slow");
 	});
+});
+
+app1.filter('renderHTMLCorrectly', function($sce)
+{
+	return function(stringToParse)
+	{
+		return $sce.trustAsHtml(stringToParse);
+	}
 });
 
 app1.controller('HomeFrontendCtrl', function($scope, $http, CONFIGS, $rootScope) {
@@ -62,6 +80,7 @@ app1.controller('HomeFrontendCtrl', function($scope, $http, CONFIGS, $rootScope)
 });
 
 app1.controller('EventsFrontendCtrl', function($scope, $http, CONFIGS, $rootScope) {
+	$rootScope.is_home = 0;
 	$scope.$on('getEventsList', function() {
 		$http({
 			url : CONFIGS.api_url + 'events?type=upcoming&limit=20&is_active=1&sort="{start_date:-1}"',
@@ -71,6 +90,17 @@ app1.controller('EventsFrontendCtrl', function($scope, $http, CONFIGS, $rootScop
 				$scope.upcoming_events_list = ret_dt.data;
 				$scope.page_count = ret_dt.meta.page_count;
 				$(".scroll_container").attr('data_page', 1);
+			}
+		});
+	});
+	$scope.$on('getEventDetails', function(event, unique_id) {
+		$http({
+			url : CONFIGS.api_url + 'events?unique_id=' + unique_id,
+			method : 'get',
+		}).success(function(ret_dt) {
+			if(ret_dt.status == 'success') {
+				$scope.event_details = ret_dt.data[0];
+				$scope.content = ret_dt.data[0].content;
 			}
 		});
 	});

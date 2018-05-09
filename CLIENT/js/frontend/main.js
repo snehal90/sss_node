@@ -172,9 +172,9 @@ wow.init();
 /*	Preloader
 /* ========================================================================= */
 
-// window.load = function(){
-//     alert('111100');
-// 	$("#preloader").fadeOut("slow");
+window.load = function(){
+    // alert('111100');
+	$("#preloader").fadeOut("slow");
 
-// };
+};
 // alert(window.onload);

@@ -1,0 +1,72 @@
+<div>
+    <section id="features" class="event_list_title">
+        <div class="container">
+            <div class="row">
+                <div class="internal-page-title text-center">
+                	<h2>{{event_details.name}}</h2>
+                    <p>{{event_details.start_date | date : "MMM d, yyyy HH:mm"}} to {{event_details.end_date | date : "MMM d, yyyy HH:mm"}}</p>
+                </div>
+        </div>
+    </section>
+
+    <section id="upcoming_events">
+        <div class="container" data_page_type="event">
+            <div class="row" ng-if="event_details.length != 0">
+                <div class="text-center fadeInDown capitalize">
+                    <h2>{{event_details.short_description}}</h2>
+                </div>
+                <div>
+                    <div>
+                        <div>
+                            <div>
+                                <div class="details_section text-center">
+                                    <div class="clearfix">
+                                        <div ng-bind-html="content | renderHTMLCorrectly"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="images_section">
+                    <ul class="project-wrapper wow animated fadeInUp list_wrapper">
+                        <li class="portfolio-item" ng-repeat="images_list in event_details.images">
+                            <a href="#" >
+                                {{
+                                    images_path = images_list.length == 0 ? '/uploads/fake.jpg': utilService.formatImagePath(images_list.image_path, 'MID');
+                                    full_images_path = images_list.length == 0 ? '/uploads/fake.jpg': utilService.formatImagePath(images_list.image_path, ''); ""
+                                }}
+                                <img ng-src="{{images_path}}" class="img-responsive" alt="{{event_details.name}}" onerror="this.src='/assets/images/no_image_default.png'" />
+                            </a>
+                            <ul class="external">
+                                <li><a class="fancybox" title="{{event_details.name}}" data-fancybox-group="works" href="{{full_images_path}}" onerror="this.href='/assets/images/no_image_default.png'" onclick="return false;" ><i class="fa fa-search"></i></a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                </div>
+            </div>
+                        
+                <!-- <ul class="project-wrapper wow animated fadeInUp list_wrapper">
+                    <li class="portfolio-item" ng-repeat="event_dt in upcoming_events_list">
+                        <a href="#" >
+                        	{{
+                        		images_path = event_details.images.length == 0 ? '/uploads/fake.jpg': utilService.formatImagePath(event_details.images[0].image_path, 'MID'); ""
+                        	}}
+                            <img ng-src="{{images_path}}" class="img-responsive" alt="{{event_dt.name}}" onerror="this.src='/assets/images/no_image_default.png'" />
+                        </a>
+                        <figcaption class="mask">
+                            <h3>{{event_dt.name}}</h3>
+                            <p>{{event_dt.short_description}}</p>
+                        </figcaption>
+                        <ul class="external">
+                            <li><a class="fancybox" title="{{event_dt.name}}" data-fancybox-group="works" href="{{images_path}}" onerror="this.href='/assets/images/no_image_default.png'" onclick="return false;" ><i class="fa fa-search"></i></a></li>
+                        </ul>
+                    </li>
+                </ul> -->
+            <div class="text-center" ng-if="event_details.length == 0">
+            	<h2>No Event Found</h2>
+            </div>
+        </div>
+    </section>
+</div>

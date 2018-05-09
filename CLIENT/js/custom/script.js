@@ -27,8 +27,8 @@ app.service('utilService', function($location) {
         var file_name = splitted_path[splitted_path.length - 1];
         if($.inArray(type.toUpperCase(), ['THUMB', 'MID']) !== -1) {
             splitted_path[splitted_path.length - 1] = type.toUpperCase();
+            splitted_path[splitted_path.length] = file_name;
         }
-        splitted_path[splitted_path.length] = file_name;
         var formatted_url = splitted_path.join('/');
         console.log(formatted_url, "::::formatted_url");
         return formatted_url;
