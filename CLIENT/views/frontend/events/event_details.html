@@ -1,14 +1,15 @@
 <div>
-    <section id="features" class="event_list_title">
+    <section id="event_details" class="event_list_title">
         <div class="container">
             <div class="row">
                 <div class="internal-page-title text-center">
                     <h2>{{event_details.name}}</h2>
                     <p>{{event_details.start_date | date : "MMM d, yyyy HH:mm"}} to {{event_details.end_date | date : "MMM d, yyyy HH:mm"}}</p>
-                    <p><a href="#" target="_blank" id="fb_share">
-                        Share on Facebook
-                    </a></p>
-                    <a href="#" target="_blank" id="share_redirector" style="display:none;"></a>
+                    <div class="share-btns">
+                        <a href="#" target="_blank" title="Share on Facebook" id="fb_share" class="btn btn-social-icon btn-facebook">
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -17,7 +18,7 @@
     <section id="upcoming_events">
         <div class="container" data_page_type="event">
             <div class="row" ng-if="event_details.length != 0">
-                <div class="text-center fadeInDown capitalize">
+                <div class="text-center fadeInDown capitalize" ng-if="event_details.short_description!=''">
                     <h2>{{event_details.short_description}}</h2>
                 </div>
                 <div>
