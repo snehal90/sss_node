@@ -23,8 +23,7 @@
                     <li class="portfolio-item portfolio-item-list" ng-repeat="event_dt in upcoming_events_list">
                         <a href="{{'/events/' + event_dt.unique_id}}" >
                         	{{
-                        		images_path = event_dt.images.length == 0 ? '/uploads/fake.jpg': utilService.formatImagePath(event_dt.images[0].image_path, 'MID');
-                                full_images_path = images_list.length == 0 ? '/uploads/fake.jpg': utilService.formatImagePath(images_list.image_path, ''); ""
+                        		images_path = event_dt.images.length == 0 ? '/uploads/fake.jpg': utilService.formatImagePath(event_dt.images[0].image_path, 'MID');""
                         	}}
                             <img ng-src="{{images_path}}" class="img-responsive" alt="{{event_dt.name}}" onerror="this.src='/assets/images/no_image_default.png'" />
                         </a>
@@ -33,7 +32,7 @@
                             <p>{{event_dt.start_date | date : "MMM d, yyyy HH:mm"}} to {{event_dt.end_date | date : "MMM d, yyyy HH:mm"}}</p>
                         </figcaption>
                         <ul class="external">
-                            <li><a class="fancybox" title="{{event_dt.name}}" data-fancybox-group="works" href="{{full_images_path}}" onerror="this.href='/assets/images/no_image_default.png'" onclick="return false;" ><i class="fa fa-search"></i></a></li>
+                            <li><a class="fancybox" title="{{event_dt.name}}" data-fancybox-group="works" href="{{event_dt.images[0].image_path}}" onerror="this.href='/assets/images/no_image_default.png'" onclick="return false;" ><i class="fa fa-search"></i></a></li>
                         </ul>
                     </li>
                 </ul>

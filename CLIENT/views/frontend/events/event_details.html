@@ -33,13 +33,12 @@
                         <li class="portfolio-item" ng-repeat="images_list in event_details.images">
                             <a href="#" >
                                 {{
-                                    images_path = images_list.length == 0 ? '/uploads/fake.jpg': utilService.formatImagePath(images_list.image_path, 'MID');
-                                    full_images_path = images_list.length == 0 ? '/uploads/fake.jpg': utilService.formatImagePath(images_list.image_path, ''); ""
+                                    images_path = images_list.length == 0 ? '/uploads/fake.jpg': utilService.formatImagePath(images_list.image_path, 'MID'); ""
                                 }}
                                 <img ng-src="{{images_path}}" class="img-responsive" alt="{{event_details.name}}" onerror="this.src='/assets/images/no_image_default.png'" />
                             </a>
                             <ul class="external">
-                                <li><a class="fancybox" title="{{event_details.name}}" data-fancybox-group="works" href="{{full_images_path}}" onerror="this.href='/assets/images/no_image_default.png'" onclick="return false;" ><i class="fa fa-search"></i></a></li>
+                                <li><a class="fancybox" title="{{event_details.name}}" data-fancybox-group="works" href="{{images_list.image_path}}" onerror="this.href='/assets/images/no_image_default.png'" onclick="return false;" ><i class="fa fa-search"></i></a></li>
                             </ul>
                         </li>
                     </ul>

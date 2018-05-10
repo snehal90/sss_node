@@ -73,16 +73,16 @@ Home Slider
                 
 
                 <ul class="project-wrapper wow animated fadeInUp">
-                    <li class="portfolio-item-list" ng-repeat="event_dt in upcoming_events_list">
+                    <li class="portfolio-item portfolio-item-list" ng-repeat="event_dt in upcoming_events_list">
                         <a href="{{'/events/' + event_dt.unique_id}}" >
                             <img ng-src="{{utilService.formatImagePath(event_dt.images[0].image_path, 'MID')}}" class="img-responsive" alt="{{event_dt.name}}" onerror="this.src='/assets/images/no_image_default.png'" />
                         </a>
                         <figcaption class="mask">
                             <h3>{{event_dt.name}}</h3>
-                            <p>{{event_dt.short_description}}</p>
+                            <p>{{event_dt.start_date | date : "MMM d, yyyy HH:mm"}} to {{event_dt.end_date | date : "MMM d, yyyy HH:mm"}}</p>
                         </figcaption>
                         <ul class="external">
-                            <li><a class="fancybox" title="{{event_dt.name}}" data-fancybox-group="works" href="{{event_dt.images[0].image_path}}" onerror="this.href='/assets/images/no_image_default.png'" ></a></li>
+                            <li><a class="fancybox" title="{{event_dt.name}}" data-fancybox-group="works" href="{{event_dt.images[0].image_path}}" onerror="this.href='/assets/images/no_image_default.png'" ><i class="fa fa-search"></i></a></li>
                         </ul>
                     </li>
                 </ul>
