@@ -3,9 +3,14 @@
         <div class="container">
             <div class="row">
                 <div class="internal-page-title text-center">
-                	<h2>{{event_details.name}}</h2>
+                    <h2>{{event_details.name}}</h2>
                     <p>{{event_details.start_date | date : "MMM d, yyyy HH:mm"}} to {{event_details.end_date | date : "MMM d, yyyy HH:mm"}}</p>
+                    <p><a href="#" target="_blank" id="fb_share">
+                        Share on Facebook
+                    </a></p>
+                    <a href="#" target="_blank" id="share_redirector" style="display:none;"></a>
                 </div>
+            </div>
         </div>
     </section>
 
@@ -49,9 +54,9 @@
                 <!-- <ul class="project-wrapper wow animated fadeInUp list_wrapper">
                     <li class="portfolio-item" ng-repeat="event_dt in upcoming_events_list">
                         <a href="#" >
-                        	{{
-                        		images_path = event_details.images.length == 0 ? '/uploads/fake.jpg': utilService.formatImagePath(event_details.images[0].image_path, 'MID'); ""
-                        	}}
+                            {{
+                                images_path = event_details.images.length == 0 ? '/uploads/fake.jpg': utilService.formatImagePath(event_details.images[0].image_path, 'MID'); ""
+                            }}
                             <img ng-src="{{images_path}}" class="img-responsive" alt="{{event_dt.name}}" onerror="this.src='/assets/images/no_image_default.png'" />
                         </a>
                         <figcaption class="mask">
@@ -64,8 +69,9 @@
                     </li>
                 </ul> -->
             <div class="text-center" ng-if="event_details.length == 0">
-            	<h2>No Event Found</h2>
+                <h2>No Event Found</h2>
             </div>
         </div>
     </section>
 </div>
+<script type="text/javascript" src="/js/frontend/details.js"></script>
