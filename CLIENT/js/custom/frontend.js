@@ -32,6 +32,10 @@ app1.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', functi
 	            $rootScope.$broadcast('getEventsList');
 	        })
 		}
+	}).state('privacy_policy', {
+		url: '/privacy_policy',
+		templateUrl : '/views/frontend/other/privacy_policy.html',
+		controller : 'CommonCtrl',
 	});
 	$locationProvider.html5Mode(true);
 }]);
@@ -135,6 +139,10 @@ app1.controller('EventsFrontendCtrl', function($scope, $http, CONFIGS, $rootScop
 			}
 		});
 	}
+});
+
+app1.controller('CommonCtrl', function($scope, $http, CONFIGS, $rootScope) {
+	$rootScope.is_home = 0;
 });
 
 $(window).on('scroll', function() {
