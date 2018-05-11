@@ -5,6 +5,7 @@ var errorCodes = require('../config/error');
 var fs = require("fs");
 var moment = require("moment");
 var async = require("async");
+var AWS = require('aws-sdk');
 
 const FILE_SIZE = 2000000; //2MB
 const UPLOAD_SIZES = [
@@ -97,10 +98,44 @@ function uploadImages (callback, images, type, is_update, base_url) {
                         var error = errorCodes.error_400.file_upload_failed;
                         callback(error);
                     } else {
+
+                        AWS.config.update({ accessKeyId: AWS_ACCESS_KEY, secretAccessKey: AWS_SECRET_KEY });
+
+                        var s3_path = '';
+                        var s3_url = AWS_S3_URL;
+                        if(key == '') {
+                            s3_path = 'uploads/' + type + '/' + imageName;
+                        } else {
+                            s3_path = 'uploads/' + type + '/' + key + '/' + imageName;
+                        }
+                        var actual_file_path = 'public/' + s3_path;
+                        // Read in the file, convert it to base64, store to S3
+                        fs.readFile(actual_file_path, function (err, data) {
+                          if (err) { throw err; }
+
+                          var base64data = new Buffer(data, 'binary');
+
+                          var s3 = new AWS.S3();
+                          s3.putObject({
+                            Bucket: AWS_BUCKET,
+                            Key: s3_path,
+                            Body: base64data,
+                            ContentType: 'image/'+ ext.replace('.', ''),
+                          },function (resp) {
+                            fs.unlink(actual_file_path, function(err) {
+                                if(err) {
+                                    console.log(err, ":::err while unlink file");
+                                }
+                            });
+                            console.log(arguments, "::::::::arguments");
+                            console.log('Successfully uploaded package.');
+                          });
+
+                        });
                         if(i == 0) {
                             var default_img = images_list.length == 0 && is_update != 1 ? 1 : 0; 
-                            images_list[images_list.length] = {'default' : default_img, 'path' : '/uploads/' + type + '/' + imageName, 'image_path' : base_url + 'uploads/' + type + '/' + imageName};
-                            gallery_list[gallery_list.length] = {'type' : type, 'path' : '/uploads/' + type + '/' + imageName, 'image_path' : base_url + 'uploads/' + type + '/' + imageName, 'is_active' : 1};
+                            images_list[images_list.length] = {'default' : default_img, 'path' : '/uploads/' + type + '/' + imageName, 'image_path' : s3_url + 'uploads/' + type + '/' + imageName};
+                            gallery_list[gallery_list.length] = {'type' : type, 'path' : '/uploads/' + type + '/' + imageName, 'image_path' : s3_url + 'uploads/' + type + '/' + imageName, 'is_active' : 1};
                         }
                         i++;
                         cb2();

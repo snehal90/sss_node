@@ -177,6 +177,10 @@ app.run(function($rootScope, $window, $http, CONFIGS, utilService, $cookies) {
 		  location.href = $rootScope.base_url + 'login'
 		}
 	});
+
+	$window.addEventListener('load', function() {
+		$("#preloader").fadeOut("slow");
+	});
 });
 
 app.controller('HomeCtrl', function($scope) {
@@ -379,6 +383,7 @@ app.controller('EventCtrl', function($scope, $http, CONFIGS, $timeout, Upload, $
 	$scope.uploadFiles = function (files) {
         $scope.files = files;
         if (files && files.length) {
+        	$("#preloader").fadeIn("slow");
             Upload.upload({
                 // url: CONFIGS.api_url + 'fileUpload',
                 url: '/api/v1/fileUpload',
@@ -388,6 +393,7 @@ app.controller('EventCtrl', function($scope, $http, CONFIGS, $timeout, Upload, $
                     type: 'EVENT'
                 }
             }).then(function (response) {
+        		$("#preloader").fadeOut("slow");
                 if(response.data.status == 'success') {
                 	images_list.push.apply(images_list, response.data.data.images_list);
                 	gallery_list.push.apply(gallery_list, response.data.data.gallery_list);
@@ -736,6 +742,7 @@ app.controller('BlogCtrl', function($scope, $http, CONFIGS, $timeout, Upload, $c
 	$scope.uploadFiles = function (files) {
         $scope.files = files;
         if (files && files.length) {
+        	$("#preloader").fadeIn("slow");
             Upload.upload({
                 // url: CONFIGS.api_url + 'fileUpload',
                 url: '/api/v1/fileUpload',
@@ -746,6 +753,7 @@ app.controller('BlogCtrl', function($scope, $http, CONFIGS, $timeout, Upload, $c
                 }
             }).then(function (response) {
                 if(response.data.status == 'success') {
+                	("#preloader").fadeOut("slow");
                 	images_list.push.apply(images_list, response.data.data.images_list);
                 	gallery_list.push.apply(gallery_list, response.data.data.gallery_list);
                 }
@@ -1047,6 +1055,7 @@ app.controller('CMSCtrl', function($scope, $http, CONFIGS, $timeout, Upload, $co
 	$scope.uploadFiles = function (files, is_bg_img) {
         $scope.files = files;
         if (files && files.length) {
+        	$("#preloader").fadeIn("slow");
             Upload.upload({
                 // url: CONFIGS.api_url + 'fileUpload',
                 url: '/api/v1/fileUpload',
@@ -1056,6 +1065,7 @@ app.controller('CMSCtrl', function($scope, $http, CONFIGS, $timeout, Upload, $co
                     type: 'CMS'
                 }
             }).then(function (response) {
+            	$("#preloader").fadeOut("slow");
                 if(response.data.status == 'success') {
                 	var updated_gallery_list = response.data.data.gallery_list;
                 	if(is_bg_img == 1) {

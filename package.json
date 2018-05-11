@@ -8,6 +8,7 @@
   "dependencies": {
     "api-version": "~0.2.0",
     "async": "~2.1.5",
+    "aws-sdk": "^2.238.1",
     "body-parser": "~1.16.0",
     "checkit": "~0.6.0",
     "cookie-parser": "~1.4.3",
