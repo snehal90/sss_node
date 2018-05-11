@@ -17,8 +17,8 @@ global.PWD_SALT = 'PINKPYTHON';
 global.SECRET_KEY = 'dBBmapwEBWUkcUg7xP8Buvp6vc36truv';
 global.JWT_SECRET_KEY = 'SsQcqWRZDYsnsJBaHQvmDE5q4r4t75Mb';
 global.VIEW_PATH = '../CLIENT/views/';
-global.AWS_ACCESS_KEY = 'AKIAIKL72TLC4LVR7TZA';
-global.AWS_SECRET_KEY = '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';
+global.AWS_ACCESS_KEY = 'AKIAIMW435VBFHXQPQFA';
+global.AWS_SECRET_KEY = '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';
 global.AWS_S3_URL = 'https://shreeswamisamarth.s3.amazonaws.com/';
 global.AWS_BUCKET = 'shreeswamisamarth';
 
