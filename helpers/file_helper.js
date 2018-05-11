@@ -71,7 +71,7 @@ function uploadImages (callback, images, type, is_update, base_url) {
             var imageName = type + '_' + moment().valueOf() + ext;
             var newPath = img.path;
 
-            var img_path = "/public/uploads/" + type;
+            var img_path = ROOT_DIR + "public/uploads/" + type;
             if (!fs.existsSync(img_path)){
                 fs.mkdirSync(img_path);
             }
